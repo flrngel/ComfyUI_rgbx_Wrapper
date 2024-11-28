@@ -1,4 +1,4 @@
 # ComfyUI_rgbx_Wrapper
 
 
-https://github.com/zheng95z/rgbx
+original project : https://github.com/zheng95z/rgbx
