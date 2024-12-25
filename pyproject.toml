@@ -1,7 +1,7 @@
 [project]
 name = "comfyui_rgbx_wrapper"
 description = "This is the rgb2x wrapper node for ComfyUI. The required models are automatically downloaded on the first run.\noriginal project : [a/https://github.com/zheng95z/rgbx](original project : https://github.com/zheng95z/rgbx)"
-version = "1.0.0"
+version = "1.0.1"
 license = {file = "LICENSE"}
 dependencies = ["torch", "diffusers", "imageio", "numpy", "opencv-python", "transformers", "huggingface-hub"]
 
