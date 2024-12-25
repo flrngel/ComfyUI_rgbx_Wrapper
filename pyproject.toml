@@ -10,6 +10,6 @@ Repository = "https://github.com/toyxyz/ComfyUI_rgbx_Wrapper"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "toyxyz"
 DisplayName = "ComfyUI_rgbx_Wrapper"
 Icon = ""
