@@ -2,6 +2,9 @@
 
 
 original project : https://github.com/zheng95z/rgbx
+fork from: https://github.com/toyxyz/ComfyUI_rgbx_Wrapper
+
+**Vibe coded**. I won't maintain this repo.
 
 This is the rgb2x wrapper node for ComfyUI. 
 
