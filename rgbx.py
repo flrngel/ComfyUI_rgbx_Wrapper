@@ -142,17 +142,24 @@ def process_x2rgb(prompt, seed, steps, guidance_scale, image_guidance_scale, alb
             return None
         
         # Input: (B, H, W, C) from ComfyUI, float [0,1]
-        # Output: (1, C, H, W), preprocessed for the pipe
-        img = image_tensor[0].permute(2, 0, 1)
+        # Output: (C, H, W), preprocessed and ready for the pipe's internal preprocessor
+        img = image_tensor[0].permute(2, 0, 1).to(device) # -> (C, H, W) on correct device
 
+        # This logic mimics the original gradio demo's load_ldr_image function
         if image_type in ['albedo', 'irradiance']:
-            img = torch.clamp(img, 0.0, 1.0) ** 2.2  # sRGB to linear
+            # Convert sRGB [0,1] to linear [0,1]
+            img = torch.clamp(img, 0.0, 1.0) ** 2.2
         elif image_type == 'normal':
-            img = img * 2.0 - 1.0  # Normalize to [-1, 1]
+            # Normalize [0,1] to [-1,1] for normal map
+            img = img * 2.0 - 1.0
         elif image_type in ['roughness', 'metallic']:
+            # Ensure it's in the [0,1] range
             img = torch.clamp(img, 0.0, 1.0)
         
-        return img.unsqueeze(0)  # Add batch dim
+        # --- FIX ---
+        # DO NOT add batch dimension here. Return a 3D tensor.
+        # The diffusers pipeline will handle batching internally.
+        return img
 
     pipe_inputs = {name: preprocess_image(tensor, name) for name, tensor in input_images.items()}
     generator = torch.Generator(device=device).manual_seed(seed)
@@ -167,6 +174,7 @@ def process_x2rgb(prompt, seed, steps, guidance_scale, image_guidance_scale, alb
         roughness=pipe_inputs['roughness'],
         metallic=pipe_inputs['metallic'],
         irradiance=pipe_inputs['irradiance'],
+        required_aovs=["albedo", "normal", "roughness", "metallic", "irradiance"],
         num_inference_steps=steps,
         generator=generator,
         guidance_scale=guidance_scale,
